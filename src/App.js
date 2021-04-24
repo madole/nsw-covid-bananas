@@ -50,7 +50,7 @@ function sortResponseData(response, currentData) {
     return null;
 }
 
-const REFRESH_TIME = 10 * 1000
+const REFRESH_TIME = 30 * 1000
 
 /**
  * Data fetching hook which stops the interval
@@ -75,7 +75,8 @@ const useAirTrafficData = (visible) => {
     }, [data]);
 
     useEffect(() => {
-        if (visible) {
+        if (visible && !intervalRef.current) {
+            getData()
             intervalRef.current = setInterval(getData, REFRESH_TIME);
         }
 
