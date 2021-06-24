@@ -81,7 +81,7 @@ function App() {
             <div className={`info-box ${hovered ? "hovered" : ""}`}>
                 <table>
                     {hovered && Object.entries(hovered).map(([k, v]) => {
-                        if (k === 'position' || k === 'HealthAdviceHTML') return
+                        if (k === 'position' || k === 'HealthAdviceHTML') return null
                         return <tr key={`${hovered.Time}${k} - ${v}`}>
                             <td className="table-key">{k}</td>
                             <td>{v}</td>
