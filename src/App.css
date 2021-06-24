@@ -1,3 +1,36 @@
 .App {
   height: 100vh;
 }
+
+.title {
+  background-color: #fff;
+  padding: 20px;
+  position: absolute;
+  top: 10px;
+  left: calc(50% - 200px);
+  z-index: 2;
+  width: 400px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.info-box {
+  height: 200px;
+  width: 400px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #fff;
+  border-radius: 20px;
+  z-index:2;
+  padding: 10px;
+  opacity: 0.2;
+  transition-duration: 0.2s;
+}
+
+.hovered {
+  opacity: 1;
+}
+.table-key {
+  font-weight: bold;
+}
