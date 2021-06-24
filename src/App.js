@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
-import {Entity, ModelGraphics, Viewer} from 'resium'
+import {CameraFlyTo, Entity, ModelGraphics, Viewer} from 'resium'
 import './App.css';
-import {Cartesian3, CesiumTerrainProvider, Ion, IonResource} from 'cesium'
+import {Cartesian3, CesiumTerrainProvider, Ion, IonResource, Rectangle} from 'cesium'
 
 Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjMjk3OGRkNS0zZTZjLTQyZGYtYjAzNy1lYTk5NmY3NDkyZTMiLCJpZCI6MzMxMzksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1OTgwNjc1ODh9.KjJzjblyvrJlF0WkZZznyR6FXfNZY432yc19DtT1Ozc'
 
@@ -60,6 +60,7 @@ function App() {
     }
     console.log(hovered)
 
+    const flyTo  = Rectangle.fromDegrees(150.253135,-34.227857,152.010948,-33.502628)
     return (
         <>
             <h1 className="title">
@@ -71,6 +72,11 @@ function App() {
                     requestRenderMode={true}
                     terrainProvider={TERRAIN_PROVIDER}
             >
+                <CameraFlyTo
+                    destination={flyTo}
+                    duration={2}
+                    once
+                />
                 {data.cartesians.map(item => (
                     <Entity position={item.position} key={item.position.latitude + item.position.longitude}
                             onMouseEnter={(e) => setHovered(item)} onMouseLeave={() => setHovered(null)}>
