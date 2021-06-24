@@ -63,10 +63,14 @@ function App() {
     const flyTo  = Rectangle.fromDegrees(150.253135,-34.227857,152.010948,-33.502628)
     return (
         <>
+            <nav>
+
             <h1 className="title">
                 <div>COVID Locations</div>
                 <div>{new Date(data.date).toDateString()}</div>
             </h1>
+
+            </nav>
             <Viewer ref={ref} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}
                     baseLayerPicker={false}
                     requestRenderMode={true}
