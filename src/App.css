@@ -32,7 +32,7 @@ nav {
   border-radius: 10px;
   z-index:2;
   padding: 10px;
-  opacity: 0.2;
+  opacity: 0;
   transition-duration: 0.2s;
 }
 
