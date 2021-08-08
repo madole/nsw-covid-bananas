@@ -71,7 +71,6 @@ function App() {
         {data.cartesians.map((item, i) => {
           const intersectsMyLocationCircle =
             doesLocationIntersectMyLocationCircle(item, myLocation, radius);
-          console.log(intersectsMyLocationCircle);
           return (
             <Entity
               position={item.position}
