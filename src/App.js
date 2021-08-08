@@ -2,73 +2,29 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { CameraFlyTo, Entity, ModelGraphics, Scene, Viewer } from "resium";
 import "./App.css";
-import {
-  Cartesian3,
-  CesiumTerrainProvider,
-  Color,
-  HeightReference,
-  Ion,
-  IonResource,
-  Rectangle,
-} from "cesium";
+import { Cartesian3, Color, HeightReference, Ion, Rectangle } from "cesium";
 import icon from "./assets/placeholder.png";
+import { doesLocationIntersectMyLocationCircle } from "./utils/doesLocationIntersectMyLocationCircle";
+import { userAgent } from "./utils/userAgent";
+import { TERRAIN_PROVIDER } from "./utils/terrainProvider";
+import { getCurrentPosition } from "./utils/getCurrentPosition";
+import { useCovidData } from "./hooks/UseCovidData";
 
 Ion.defaultAccessToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjMjk3OGRkNS0zZTZjLTQyZGYtYjAzNy1lYTk5NmY3NDkyZTMiLCJpZCI6MzMxMzksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1OTgwNjc1ODh9.KjJzjblyvrJlF0WkZZznyR6FXfNZY432yc19DtT1Ozc";
 
-const DATA_URL =
-  "https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/venue-data.json";
-
-/**
- * Data fetching hook
- */
-const useCovidData = () => {
-  const [data, setData] = useState(null);
-  useEffect(() => {
-    fetch(DATA_URL)
-      .then((resp) => resp.json())
-      .then(({ date, data }) => {
-        const cartesians = data?.monitor.map((item) => {
-          const { Lat, Lon } = item;
-          const lon = Number(Lon.split(",")[0]);
-          const lat = Number(Lat.split(",")[0]);
-          const position = Cartesian3.fromDegrees(lon, lat);
-          return { ...item, position };
-        });
-        setData({ date, cartesians });
-      });
-  }, []);
-
-  return data;
-};
-
-const geolocationOptions = {
-  enableHighAccuracy: true,
-  timeout: 5000,
-  maximumAge: 0,
-};
-
-function getCurrentPosition() {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      resolve,
-      reject,
-      geolocationOptions
-    );
-  });
-}
-
-const TERRAIN_PROVIDER = new CesiumTerrainProvider({
-  url: IonResource.fromAssetId(1),
-});
-
-const userAgent = navigator.userAgent.toLowerCase();
+const SYDNEY_BOUNDING_BOX = Rectangle.fromDegrees(
+  150.253135,
+  -34.227857,
+  152.010948,
+  -33.502628
+);
 
 function App() {
   const ref = useRef(null);
   const [hovered, setHovered] = useState(null);
   const [showMyLocation, setShowMyLocation] = useState(false);
-  const [location, setLocation] = useState(null);
+  const [myLocation, setMyLocation] = useState(null);
   const [radius, setRadius] = useState(1);
 
   const data = useCovidData();
@@ -84,7 +40,7 @@ function App() {
   useEffect(() => {
     if (!showMyLocation) return;
     getCurrentPosition().then((data) => {
-      setLocation(
+      setMyLocation(
         Cartesian3.fromDegrees(data.coords.longitude, data.coords.latitude, 50)
       );
     });
@@ -94,12 +50,6 @@ function App() {
     return <h1>Loading...</h1>;
   }
 
-  const flyTo = Rectangle.fromDegrees(
-    150.253135,
-    -34.227857,
-    152.010948,
-    -33.502628
-  );
   return (
     <>
       <nav>
@@ -117,11 +67,11 @@ function App() {
         useBrowserRecommendedResolution={true}
       >
         <Scene />
-        <CameraFlyTo destination={flyTo} duration={2} once />
+        <CameraFlyTo destination={SYDNEY_BOUNDING_BOX} duration={2} once />
         {data.cartesians.map((item, i) => {
-          if (!item.position.x) {
-            debugger;
-          }
+          const intersectsMyLocationCircle =
+            doesLocationIntersectMyLocationCircle(item, myLocation, radius);
+          console.log(intersectsMyLocationCircle);
           return (
             <Entity
               position={item.position}
@@ -133,6 +83,11 @@ function App() {
                 uri={"/banana.gltf"}
                 minimumPixelSize={200}
                 maximumPixelSize={500}
+                lightColor={
+                  intersectsMyLocationCircle
+                    ? new Cartesian3(255, 0, 0)
+                    : undefined
+                }
               />
             </Entity>
           );
@@ -140,7 +95,7 @@ function App() {
         <Entity
           show={showMyLocation}
           key={radius}
-          position={location}
+          position={myLocation}
           ellipse={{
             semiMinorAxis: radius * 1000,
             semiMajorAxis: radius * 1000,
@@ -150,7 +105,7 @@ function App() {
         />
         <Entity
           show={showMyLocation}
-          position={location}
+          position={myLocation}
           point={{
             color: Color.AQUA,
             outlineColor: Color.BLACK,
