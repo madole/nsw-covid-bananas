@@ -70,7 +70,9 @@ function App() {
         <CameraFlyTo destination={SYDNEY_BOUNDING_BOX} duration={2} once />
         {data.cartesians.map((item, i) => {
           const intersectsMyLocationCircle =
-            doesLocationIntersectMyLocationCircle(item, myLocation, radius);
+            showMyLocation === false
+              ? false
+              : doesLocationIntersectMyLocationCircle(item, myLocation, radius);
           return (
             <Entity
               position={item.position}
