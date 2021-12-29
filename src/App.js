@@ -11,7 +11,7 @@ import { getCurrentPosition } from "./utils/getCurrentPosition";
 import { useCovidData } from "./hooks/UseCovidData";
 
 Ion.defaultAccessToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjMjk3OGRkNS0zZTZjLTQyZGYtYjAzNy1lYTk5NmY3NDkyZTMiLCJpZCI6MzMxMzksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1OTgwNjc1ODh9.KjJzjblyvrJlF0WkZZznyR6FXfNZY432yc19DtT1Ozc";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1OWQ0MTUxZS02ZmZmLTQzZjktOWU0Mi0zOGQ1NTcxY2E2NDkiLCJpZCI6MzMxMzksImlhdCI6MTY0MDc0Njg4NX0.LS2S6iv8dj0_0cwq2KU5mPgSojy0E11omDHM5bDjzbU";
 
 const SYDNEY_BOUNDING_BOX = Rectangle.fromDegrees(
   150.253135,
